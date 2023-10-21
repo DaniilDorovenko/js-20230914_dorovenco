@@ -187,16 +187,21 @@ export default class SortableTable extends SortableTableV2 {
   constructor(headersConfig, {
       url = '',
     data = [],
-    sorted = {}
+    sorted = {},
+    isSortLocally = false,
   } = {}) {
  
       super(headersConfig, data);
       this.url = new URL(url, BACKEND_URL);
       this.data = data;
+      this.isSortLocally = isSortLocally;
 
-      // this.sortOnClient(this.sorted.id, this.sorted.order)
-      // this.sortOnServer(this.sorted.id, this.sorted.order)
- 
+      isSortLocally ? this.sortOnClient(this.sorted.id, this.sorted.order) : this.sortOnServer(this.sorted.id, this.sorted.order);
+      
+  }
+
+  async render() {
+  	this.isSortLocally ? await this.sortOnClient(this.sorted.id, this.sorted.order) : await this.sortOnServer(this.sorted.id, this.sorted.order);
   }
  
  async sortOnClient(id, order) {
